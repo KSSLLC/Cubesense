@@ -29,7 +29,6 @@ int latticeSaveAnimationFile;
 char latticeSaveAnimationFileName[256+3+1];
 int latticeSaveAnimationFileNameLength;
 
-
 void latticeInit()
 {
 	lattice=new Lattice();
@@ -56,7 +55,7 @@ Lattice::~Lattice(void)
 int Lattice::newAnimation(void)
 {
 	if ((latticeNewAnimationLatticeX<0)|(latticeNewAnimationLatticeX>LATTICE_MAX_X)|
-		(latticeNewAnimationLatticeY<0)|(latticeNewAnimationLatticeZ>LATTICE_MAX_Z)|
+		(latticeNewAnimationLatticeY<0)|(latticeNewAnimationLatticeY>LATTICE_MAX_Y)|
 		(latticeNewAnimationLatticeZ<0)|(latticeNewAnimationLatticeZ>LATTICE_MAX_Z))
 			return LATTICE_ERROR_WRONG_SIZE;
 
@@ -84,7 +83,7 @@ int Lattice::testPatternRainbow(int f)
 				frame[f].blue[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=z*255/sizeZ;
 			}
 	return 0;
-	
+
 }
 int Lattice::copyFrame(int f, unsigned char* buffer)
 {
@@ -120,6 +119,33 @@ int Lattice::drawVoxel(int f, int x, int y, int z, int r, int g, int b)
 	frame[f].red[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=r;
 	frame[f].green[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=g;
 	frame[f].blue[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=b;
+}
+int Lattice::getColorR(int f, int x, int y, int z)
+{
+	if (f>=frameCount)
+		return LATTICE_ERROR_WRONG_FRAME;
+	if ((x<0)|(x>sizeX)|(y<0)|(y>sizeY)|(z<0)|(z>sizeZ))
+		return LATTICE_ERROR_WRONG_VOXEL;
+
+	return frame[f].red[LATTICE_GET_PIXEL_ADDRESS(x,y,z)];
+}
+int Lattice::getColorB(int f, int x, int y, int z)
+{
+	if (f>=frameCount)
+		return LATTICE_ERROR_WRONG_FRAME;
+	if ((x<0)|(x>sizeX)|(y<0)|(y>sizeY)|(z<0)|(z>sizeZ))
+		return LATTICE_ERROR_WRONG_VOXEL;
+
+	return frame[f].blue[LATTICE_GET_PIXEL_ADDRESS(x,y,z)];
+}
+int Lattice::getColorG(int f, int x, int y, int z)
+{
+	if (f>=frameCount)
+		return LATTICE_ERROR_WRONG_FRAME;
+	if ((x<0)|(x>sizeX)|(y<0)|(y>sizeY)|(z<0)|(z>sizeZ))
+		return LATTICE_ERROR_WRONG_VOXEL;
+
+	return frame[f].green[LATTICE_GET_PIXEL_ADDRESS(x,y,z)];
 }
 int Lattice::setCanvasStep(double step)
 {
@@ -176,10 +202,10 @@ int Lattice::drawCube(int f, int x1, int y1, int z1, int x2, int y2, int z2, int
 	if (y2<0)	{y2=0;	p++;}		if (y2>=sizeY)	{y2=sizeY-1;	p++;}
 	if (z1<0)	{z1=0;	p++;}		if (z1>=sizeZ)	{z1=sizeZ-1;	p++;}
 	if (z2<0)	{z2=0;	p++;}		if (z2>=sizeZ)	{z2=sizeZ-1;	p++;}
-	
+
 	if (p==6)
 		return LATTICE_ERROR_WRONG_VOXEL;
-	
+
 	for(x=x1;x<=x2;x++)
 		for(y=y1;y<=y2;y++)
 			for(z=z1;z<=z2;z++)
@@ -258,13 +284,13 @@ int Lattice::drawTorus(int f, double centerX, double centerY, double centerZ, do
 				canvasZ=canvasZ-centerZ;
 
 				DistancePointEllipse(canvasX, canvasY, radiusX, radiusY, 1e-08, 32, iterations, ellipseX, ellipseY);
-				
+
 				angle=geometryArcTan(ellipseX/abs(ellipseY));
 				if (ellipseY>0)
 					angle=90-angle;
 				else
 					angle=270+angle;
-	
+
 				if (((angleStart<=angleEnd)&(angle>=angleStart)&(angle<=angleEnd))|((angleStart>=angleEnd)&((angle>=angleStart)|(angle<=angleEnd))))
 				{
 					dd=sqrt((ellipseX-canvasX)*(ellipseX-canvasX)+(ellipseY-canvasY)*(ellipseY-canvasY)+(canvasZ)*(canvasZ));
@@ -423,7 +449,7 @@ int Lattice::saveFile()
 	char buf[LATTICE_MAX_SIZE];
 
 	unsigned char bufferOutHeader[HEADER_SIZE];
-	
+
 	for(i=0;i<HEADER_SIZE;i++)
 		bufferOutHeader[i]=0;
 
@@ -433,7 +459,7 @@ int Lattice::saveFile()
 	bufferOutHeader[PLAYBACK_OFFSET_FILETYPE]=0x01;
 	bufferOutHeader[PLAYBACK_OFFSET_RTAID]=0x00;
 	*(int*)(&bufferOutHeader[PLAYBACK_OFFSET_FRAMECOUNT])=frameCount;
-	
+
 
 	bufferOutHeader[PLAYBACK_OFFSET_LATTICESIZE]=lattice->getSizeX();
 	bufferOutHeader[PLAYBACK_OFFSET_LATTICESIZE+1]=lattice->getSizeY();
@@ -481,7 +507,7 @@ int Lattice::openFile()
 	int i;
 	int j;
 	char buf[LATTICE_MAX_SIZE];
-	
+
 	unsigned char bufferInHeader[HEADER_SIZE];
 
 	std::ifstream fin(latticeOpenAnimationFileName, std::ios_base::in | std::ios_base::binary);
@@ -500,7 +526,7 @@ int Lattice::openFile()
 		latticeNewAnimationLatticeZ=bufferInHeader[PLAYBACK_OFFSET_LATTICESIZE+2];
 
 		lattice->newAnimation();
-			
+
 		for(i=0;i<32;i++)
 			latticeAnimationTitle[i]=bufferInHeader[PLAYBACK_OFFSET_ANIMATIONTITLE+i];
 		SendMessageW((HWND)wndprocFrmMainHandle,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_ANIMATION_TITLE,0);
@@ -522,7 +548,7 @@ int Lattice::openFile()
 			for(j=0;j<sizeX*sizeY*sizeZ;j++)
 				frame[i].blue[j]=buf[j];
 
-	
+
 		}
 
 		SendMessageW((HWND)threadCoreFrmFramesHandler,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_FRAME_LIST,latticeNewAnimationFrames);

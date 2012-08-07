@@ -28,7 +28,7 @@ int scriptSoundFft[1024];
 void scriptInit()
 {
 	scriptRunning=0;
-} 
+}
 
 namespace scriptInterface
 {
@@ -44,6 +44,9 @@ namespace scriptInterface
 		int getSizeX();
 		int getSizeY();
 		int getSizeZ();
+		int getColorR(int f, int x, int y, int z);
+		int getColorG(int f, int x, int y, int z);
+		int getColorB(int f, int x, int y, int z);
 		int rnd(int max);
 		double getCanvasMinX();
 		double getCanvasMaxX();
@@ -77,7 +80,7 @@ public:
 		int r;
 		WaitForSingleObject(threadMutexScriptStatus, INFINITE);
 		r=scriptTerminateThread;
-		ReleaseMutex(threadMutexScriptStatus);	
+		ReleaseMutex(threadMutexScriptStatus);
 		return r;
 	}
 	virtual void showNumber(int n)
@@ -88,6 +91,19 @@ public:
 	virtual int drawVoxel(int f, int x, int y, int z, int r, int g, int b)
 	{
 		return lattice->drawVoxel(f, x, y ,z, r, g, b);
+	}
+
+	virtual int getColorR(int f, int x, int y, int z)
+	{
+		return lattice->getColorR(f, x, y ,z);
+	}
+	virtual int getColorG(int f, int x, int y, int z)
+	{
+		return lattice->getColorG(f, x, y ,z);
+	}
+	virtual int getColorB(int f, int x, int y, int z)
+	{
+		return lattice->getColorB(f, x, y ,z);
 	}
 	virtual int drawCube(int f, int x1, int y1, int z1, int x2, int y2, int z2, int r, int g, int b)
 	{
@@ -223,7 +239,7 @@ System::String^ scriptAppendCs(System::String^ script)
 
 
 
-DWORD WINAPI scriptCompile( LPVOID lpParam ) 
+DWORD WINAPI scriptCompile( LPVOID lpParam )
 //void scriptCompile(void*)
 {
 	int i,j,k,l,p;
@@ -244,10 +260,10 @@ DWORD WINAPI scriptCompile( LPVOID lpParam )
 	System::CodeDom::Compiler::CompilerParameters ^params;
 	System::CodeDom::Compiler::CompilerResults ^results;
 	System::CodeDom::Compiler::ICodeCompiler ^compiler;
-	
+
 	QueryPerformanceFrequency((LARGE_INTEGER*)&tcf);
 	QueryPerformanceCounter((LARGE_INTEGER*)&tc1);
-	
+
 	srand(time(NULL));
 
 	SendMessageW((HWND)wndprocFrmMainHandle,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_MAIN_STATUS,2);
@@ -261,7 +277,7 @@ DWORD WINAPI scriptCompile( LPVOID lpParam )
 		provider=gcnew  Microsoft::VisualBasic::VBCodeProvider();
 	if (scriptType==SCRIPT_TYPE_CS)
 		provider=gcnew  Microsoft::CSharp::CSharpCodeProvider();
-	
+
 	params=gcnew System::CodeDom::Compiler::CompilerParameters();
 	params->GenerateExecutable=false;
 	params->GenerateInMemory=true;
@@ -269,9 +285,11 @@ DWORD WINAPI scriptCompile( LPVOID lpParam )
 	appFullName=appFullName->Substring(8,appFullName->Length-8);
 	params->ReferencedAssemblies->Add(appFullName);
 	params->ReferencedAssemblies->Add("System.Windows.Forms.dll");
+	params->ReferencedAssemblies->Add("System.Drawing.dll");
 	params->ReferencedAssemblies->Add("System.dll");
+
 	compiler=provider->CreateCompiler() ;
-	
+
 	if (scriptType==SCRIPT_TYPE_VB)
 		script=scriptAppendVb(script);
 	if (scriptType==SCRIPT_TYPE_CS)
@@ -283,8 +301,8 @@ DWORD WINAPI scriptCompile( LPVOID lpParam )
 	p=0;
 	if (results->Errors->Count!=0)
 	{
-		
-		
+
+
 		for(i=0;i<scriptErrorCount;i++)
 		{
 			singleErrorSS=((System::Object^)results->Errors[i])->ToString();
@@ -307,10 +325,10 @@ DWORD WINAPI scriptCompile( LPVOID lpParam )
 					singleErrorSSP=singleErrorSS->Substring(j,1)+gcnew System::String(tc)+singleErrorSS->Substring(k,l-k);//,l-k)
 					j=0;
 				}
-				
+
 			;
 			l=singleErrorSSP->Length;
-			
+
 
 			//if (singleError!=0)
 			//	delete singleError;
@@ -322,7 +340,7 @@ DWORD WINAPI scriptCompile( LPVOID lpParam )
 					scriptErrors[j+p]=singleError[j];
 			scriptErrors[p+l]=0;
 			p=p+l+1;
- 
+
 		}
 		SendMessageW((HWND)wndprocFrmScriptOutputHandle,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_SCRIPT_ERRORS,0);
 
@@ -339,7 +357,7 @@ DWORD WINAPI scriptCompile( LPVOID lpParam )
 			QueryPerformanceCounter((LARGE_INTEGER*)&tc2);
 			SendMessageW((HWND)wndprocFrmScriptOutputHandle,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_COMPILETIME,(tc2-tc1)*1000/tcf);
 
-	
+
 			scriptInterface::IHost ^scriptIHost;
 			scriptIHost=gcnew ScriptIHost;
 
@@ -548,9 +566,9 @@ void scriptRealTimeHandler()
 		hdll = LoadLibraryA("F:\\Lumisense\\eigthCubed\\Software\\CubeSense\\Simulations\\uscript.dll");
 		if (hdll!=0)
 		{
-			scriptMain=(void(*)(void))GetProcAddress(hdll,"scriptMain"); 
-			scriptGlBuffer=(char*)GetProcAddress(hdll,"glBuffer"); 
-			audioFft=(int*)GetProcAddress(hdll,"audioFft"); 
+			scriptMain=(void(*)(void))GetProcAddress(hdll,"scriptMain");
+			scriptGlBuffer=(char*)GetProcAddress(hdll,"glBuffer");
+			audioFft=(int*)GetProcAddress(hdll,"audioFft");
 			//glBuffer=0;
 
 			scriptRealTimePlaying=1;
@@ -565,12 +583,12 @@ void scriptRealTimeHandler()
 		scriptGlBuffer=0;
 		scriptMain=0;
 	}
-	if (scriptRealTimePlaying==1) 
+	if (scriptRealTimePlaying==1)
 	{
 		threadCopyContentAudioCoreOut();
 		for(i=0;i<1024;i++)
 			audioFft[i]=scriptSoundFft[i];
-	
+
 
 		scriptMain();
 	}

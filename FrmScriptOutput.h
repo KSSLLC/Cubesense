@@ -43,7 +43,7 @@ namespace CubeSense {
 			}
 		}
 	private: System::Windows::Forms::ListBox^  listBox1;
-	protected: 
+	protected:
 
 	private:
 		/// <summary>
@@ -60,25 +60,25 @@ namespace CubeSense {
 		{
 			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
 			this->SuspendLayout();
-			// 
+			//
 			// listBox1
-			// 
+			//
 			this->listBox1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->listBox1->Font = (gcnew System::Drawing::Font(L"Courier New", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			this->listBox1->Font = (gcnew System::Drawing::Font(L"Courier New", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(186)));
 			this->listBox1->FormattingEnabled = true;
 			this->listBox1->ItemHeight = 16;
 			this->listBox1->Location = System::Drawing::Point(0, 0);
 			this->listBox1->Name = L"listBox1";
 			this->listBox1->ScrollAlwaysVisible = true;
-			this->listBox1->Size = System::Drawing::Size(292, 260);
+			this->listBox1->Size = System::Drawing::Size(292, 266);
 			this->listBox1->TabIndex = 0;
-			this->listBox1->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &FrmScriptOutput::listBox1_MouseDoubleClick);
 			this->listBox1->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &FrmScriptOutput::listBox1_MouseClick);
 			this->listBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &FrmScriptOutput::listBox1_SelectedIndexChanged);
-			// 
+			this->listBox1->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &FrmScriptOutput::listBox1_MouseDoubleClick);
+			//
 			// FrmScriptOutput
-			// 
+			//
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 266);
@@ -91,7 +91,7 @@ namespace CubeSense {
 
 		}
 #pragma endregion
-	public: 
+	public:
 		virtual void WndProc(System::Windows::Forms::Message% ThisMsg) override;
 
 	private: System::Void FrmScriptOutput_Load(System::Object^  sender, System::EventArgs^  e) {

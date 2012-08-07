@@ -11,12 +11,12 @@ using namespace System::Security::Permissions;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly:AssemblyTitleAttribute("CubeSense")];
-[assembly:AssemblyDescriptionAttribute("")];
+[assembly:AssemblyTitleAttribute("CubeSense.exe")];
+[assembly:AssemblyDescriptionAttribute("A Windows application for creating and visualizing 3D animations on an LED cube.")];
 [assembly:AssemblyConfigurationAttribute("")];
-[assembly:AssemblyCompanyAttribute("Medelkom")];
+[assembly:AssemblyCompanyAttribute("Lumisense")];
 [assembly:AssemblyProductAttribute("CubeSense")];
-[assembly:AssemblyCopyrightAttribute("Copyright (c) Medelkom 2010")];
+[assembly:AssemblyCopyrightAttribute("© Lumisense 2010-2012. All rights reserved.")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 
@@ -30,6 +30,7 @@ using namespace System::Security::Permissions;
 //
 // You can specify all the value or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
+// [assembly:AssemblyVersionAttribute("1.0.*")];
 
 [assembly:AssemblyVersionAttribute("1.0.*")];
 

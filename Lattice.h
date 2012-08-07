@@ -1,17 +1,17 @@
 
-#define LATTICE_DEFAULT_FRAMES				600
-#define LATTICE_DEFAULT_SIZE_X				20
-#define LATTICE_DEFAULT_SIZE_Y				20
-#define LATTICE_DEFAULT_SIZE_Z				24
+#define LATTICE_DEFAULT_FRAMES				2048
+#define LATTICE_DEFAULT_SIZE_X				8
+#define LATTICE_DEFAULT_SIZE_Y				8
+#define LATTICE_DEFAULT_SIZE_Z				8
 
 #define LATTICE_MAX_X						24
 #define LATTICE_MAX_Y						24
 #define LATTICE_MAX_Z						24
 #define LATTICE_MAX_SIZE					(LATTICE_MAX_X*LATTICE_MAX_Y*LATTICE_MAX_Z)
 
-#define LATTICE_ERROR_WRONG_SIZE			1
-#define LATTICE_ERROR_WRONG_FRAME			2
-#define LATTICE_ERROR_WRONG_VOXEL			3
+#define LATTICE_ERROR_WRONG_SIZE			-1
+#define LATTICE_ERROR_WRONG_FRAME			-2
+#define LATTICE_ERROR_WRONG_VOXEL			-3
 
 #define LATTICE_GET_PIXEL_ADDRESS(x,y,z)	((z*sizeY+y)*sizeX+x)
 
@@ -60,6 +60,11 @@ public:
 	int copyFrame(int f, unsigned char* buffer);
 	int copyFrameForUsb(int f, unsigned char* buffer);
 	int drawVoxel(int f, int x, int y, int z, int r, int g, int b);
+
+	int getColorR(int f, int x, int y, int z);
+	int getColorG(int f, int x, int y, int z);
+	int getColorB(int f, int x, int y, int z);
+
 	int	drawTorus(int f, double centerX, double centerY, double centerZ, double angleStart, double angleEnd, double radiusX, double radiusY, double radius, double rotationX, double rotationY, double rotationZ, double rotationAngleX, double rotationAngleY, double rotationAngleZ, int r, int g, int b);
 	int drawCube(int f, int x1, int y1, int z1, int x2, int y2, int z2, int r, int g, int b);
 	int cleanFrame(int f);
