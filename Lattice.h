@@ -22,8 +22,7 @@
 #define PLAYBACK_OFFSET_LATTICESIZE			0x0009
 #define PLAYBACK_OFFSET_ANIMATIONTITLE		0x000C
 #define PLAYBACK_OFFSET_STREAM				0x0100
-#define HEADER_SIZE 256
-
+#define HEADER_SIZE							256
 
 class Lattice
 {
@@ -50,7 +49,7 @@ private:
 	int sizeX;
 	int sizeY;
 	int sizeZ;
-
+	int sizeXYZ;
 
 public:
 	Lattice(void);
@@ -64,7 +63,7 @@ public:
 	int getColorR(int f, int x, int y, int z);
 	int getColorG(int f, int x, int y, int z);
 	int getColorB(int f, int x, int y, int z);
-
+	int setFrameSize(int f, int x, int y, int z);
 	int	drawTorus(int f, double centerX, double centerY, double centerZ, double angleStart, double angleEnd, double radiusX, double radiusY, double radius, double rotationX, double rotationY, double rotationZ, double rotationAngleX, double rotationAngleY, double rotationAngleZ, int r, int g, int b);
 	int drawCube(int f, int x1, int y1, int z1, int x2, int y2, int z2, int r, int g, int b);
 	int cleanFrame(int f);

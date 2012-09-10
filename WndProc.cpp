@@ -101,7 +101,7 @@ void FrmMain::WndProc(System::Windows::Forms::Message %ThisMsg)
 		{
 
 			sprintf_s(&tc[0], 20,"Frame: %i", (int)ThisMsg.LParam);
-			axCommandBars1->StatusBar->FindPane(IdsStatusBarItems::ITEM_ACTIVE_FRAME)->Text=gcnew String(tc);
+ 			axCommandBars1->StatusBar->FindPane(IdsStatusBarItems::ITEM_ACTIVE_FRAME)->Text=gcnew String(tc);
 		
 
 		}
@@ -262,8 +262,8 @@ void FrmFrames::WndProc(System::Windows::Forms::Message %ThisMsg)
 
 void FrmScriptSource::WndProc(System::Windows::Forms::Message %ThisMsg)
 {
-	int i;
-	char tc[1024];
+//	int i;
+//	char tc[1024];
 
 	if (ThisMsg.Msg == wndprocMessages[0])
 	{	

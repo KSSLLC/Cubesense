@@ -54,7 +54,7 @@ Lattice::~Lattice(void)
 
 int Lattice::newAnimation(void)
 {
-	if ((latticeNewAnimationLatticeX<0)|(latticeNewAnimationLatticeX>LATTICE_MAX_X)|
+ 	if ((latticeNewAnimationLatticeX<0)|(latticeNewAnimationLatticeX>LATTICE_MAX_X)|
 		(latticeNewAnimationLatticeY<0)|(latticeNewAnimationLatticeY>LATTICE_MAX_Y)|
 		(latticeNewAnimationLatticeZ<0)|(latticeNewAnimationLatticeZ>LATTICE_MAX_Z))
 			return LATTICE_ERROR_WRONG_SIZE;
@@ -66,6 +66,7 @@ int Lattice::newAnimation(void)
 	sizeX=latticeNewAnimationLatticeX;
 	sizeY=latticeNewAnimationLatticeY;
 	sizeZ=latticeNewAnimationLatticeZ;
+	sizeXYZ=sizeX*sizeY*sizeZ;
 	return 0;
 }
 
@@ -96,6 +97,7 @@ int Lattice::copyFrame(int f, unsigned char* buffer)
 		buffer[i+LATTICE_MAX_SIZE]=frame[f].green[i];
 		buffer[i+2*LATTICE_MAX_SIZE]=frame[f].blue[i];
 	}
+	return 0;
 }
 int Lattice::copyFrameForUsb(int f, unsigned char* buffer)
 {
@@ -108,6 +110,7 @@ int Lattice::copyFrameForUsb(int f, unsigned char* buffer)
 		buffer[i+sizeX*sizeY*sizeZ]=frame[f].green[i];
 		buffer[i+2*sizeX*sizeY*sizeZ]=frame[f].blue[i];
 	}
+	return 0;
 }
 int Lattice::drawVoxel(int f, int x, int y, int z, int r, int g, int b)
 {
@@ -119,8 +122,22 @@ int Lattice::drawVoxel(int f, int x, int y, int z, int r, int g, int b)
 	frame[f].red[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=r;
 	frame[f].green[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=g;
 	frame[f].blue[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=b;
+	return 0;
 }
+
 int Lattice::getColorR(int f, int x, int y, int z)
+                                                                              /*
++------------------------------------------------------------------------------+
+| getColorR function: Returns the RED color value currently assigned to a      |
+| voxel in a lattice frame. Returns an error code if any parameter received is |
+| outside the range of defined values.                                         |
+|                                                                              |
+| Parameters: int f = the number of the frame to be referenced                 |
+|             int x = offset of the voxel in the x-plane                       |
+|             int y = offset of the voxel in the y-plane                       |
+|             int z = offset of the voxel in the z-plane                       |
++------------------------------------------------------------------------------+
+                                                                              */
 {
 	if (f>=frameCount)
 		return LATTICE_ERROR_WRONG_FRAME;
@@ -129,7 +146,20 @@ int Lattice::getColorR(int f, int x, int y, int z)
 
 	return frame[f].red[LATTICE_GET_PIXEL_ADDRESS(x,y,z)];
 }
+
 int Lattice::getColorB(int f, int x, int y, int z)
+                                                                              /*
++------------------------------------------------------------------------------+
+| getColorB function: Returns the BLUE color value currently assigned to a     |
+| voxel in a lattice frame. Returns an error code if any parameter received is |
+| outside the range of defined values.                                         |
+|                                                                              |
+| Parameters: int f = the number of the frame to be referenced                 |
+|             int x = offset of the voxel in the x-plane                       |
+|             int y = offset of the voxel in the y-plane                       |
+|             int z = offset of the voxel in the z-plane                       |
++------------------------------------------------------------------------------+
+                                                                              */
 {
 	if (f>=frameCount)
 		return LATTICE_ERROR_WRONG_FRAME;
@@ -138,7 +168,20 @@ int Lattice::getColorB(int f, int x, int y, int z)
 
 	return frame[f].blue[LATTICE_GET_PIXEL_ADDRESS(x,y,z)];
 }
+
 int Lattice::getColorG(int f, int x, int y, int z)
+                                                                              /*
++------------------------------------------------------------------------------+
+| getColorG function: Returns the GREEN color value currently assigned to a    |
+| voxel in a lattice frame. Returns an error code if any parameter received is |
+| outside the range of defined values.                                         |
+|                                                                              |
+| Parameters: int f = the number of the frame to be referenced                 |
+|             int x = offset of the voxel in the x-plane                       |
+|             int y = offset of the voxel in the y-plane                       |
+|             int z = offset of the voxel in the z-plane                       |
++------------------------------------------------------------------------------+
+                                                                              */
 {
 	if (f>=frameCount)
 		return LATTICE_ERROR_WRONG_FRAME;
@@ -147,6 +190,68 @@ int Lattice::getColorG(int f, int x, int y, int z)
 
 	return frame[f].green[LATTICE_GET_PIXEL_ADDRESS(x,y,z)];
 }
+
+int Lattice::setFrameSize(int f, int x, int y, int z)
+                                                                              /*
++------------------------------------------------------------------------------+
+| setFrameSize function: define the dimensions and the number of frames        |
+| allocated to the lattice. Returns an error code if any of the dimension      |
+| parameters are outside the range of allowable values.                        |
+|                                                                              |
+| Parameters: int f = number of frames to be allocated                         |
+|             int x = number of voxels in the x-plane                          |
+|             int y = number of voxels in the y-plane                          |
+|             int z = number of voxels in the z-plane                          |
++------------------------------------------------------------------------------+
+                                                                              */
+{
+	int rc = 0; /* Return Code */
+
+	if ((x < 0) | (x > LATTICE_MAX_X) |
+		(y < 0) | (y > LATTICE_MAX_Y) |
+		(z < 0) | (z > LATTICE_MAX_Z))
+		rc = LATTICE_ERROR_WRONG_SIZE; /* one or more dimensions exceed max */
+	else
+	{   
+		if (frame)  
+			delete [] frame;
+
+		frameCount	= f;
+		sizeX		= x;
+		sizeY		= y;
+		sizeZ		= z;
+		sizeXYZ		= x * y * z;
+		frame		= new Frame[f];
+
+		/* Set the color of all voxels in all frames to black (off) */
+		rc = lattice->cleanFrames(0, f);
+
+		/* Display the frames list reflecting the frame count in the frames form */
+		SendMessageW((HWND)threadCoreFrmFramesHandler,
+			         wndprocMessages[0],
+					 WNDPROC_MESSAGE0_SHOW_FRAME_LIST,
+					 f);
+
+		/* Set the lattice animation title field to nulls */	
+		std::fill_n(latticeAnimationTitle,
+			        sizeof(latticeAnimationTitle) / sizeof(latticeAnimationTitle[0]),
+					0);
+
+		/* Display the lattice animation title in the main form */	
+		SendMessageW((HWND)wndprocFrmMainHandle,
+			         wndprocMessages[0],
+					 WNDPROC_MESSAGE0_SHOW_ANIMATION_TITLE,
+					 0);
+
+		/* Display the lattice dimensions in the main form */		
+		SendMessageW((HWND)wndprocFrmMainHandle,
+			         wndprocMessages[0],
+					 WNDPROC_MESSAGE0_SHOW_LATTICE_SIZE,
+					 ((x * LATTICE_MAX_Y) + y) * LATTICE_MAX_Z  + z);
+	}
+	return rc;
+}
+
 int Lattice::setCanvasStep(double step)
 {
 	this->canvasStep=step;
@@ -220,7 +325,6 @@ int Lattice::drawCube(int f, int x1, int y1, int z1, int x2, int y2, int z2, int
 int Lattice::drawTorus(int f, double centerX, double centerY, double centerZ, double angleStart, double angleEnd, double radiusX, double radiusY, double radius, double rotationX, double rotationY, double rotationZ, double rotationAngleX, double rotationAngleY, double rotationAngleZ, int r, int g, int b)
 {
 	int p;
-	int x,y,z;
 	int i,j,k;
 	p=0;
 	if (f>=frameCount)
@@ -331,40 +435,34 @@ int Lattice::drawTorus(int f, double centerX, double centerY, double centerZ, do
 			}
 	return 0;
 }
-
 int Lattice::cleanFrame(int f)
 {
-	int x,y,z;
 	if (f>=frameCount)
 		return LATTICE_ERROR_WRONG_FRAME;
-	for(x=0;x<sizeX;x++)
-		for(y=0;y<sizeY;y++)
-			for(z=0;z<sizeZ;z++)
-			{
-				frame[f].red[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=0;
-				frame[f].green[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=0;
-				frame[f].blue[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=0;
-			}
+
+	std::fill_n(frame[f].red,   sizeXYZ, 0);
+	std::fill_n(frame[f].green, sizeXYZ, 0);
+	std::fill_n(frame[f].blue,  sizeXYZ, 0);
+
+	return 0;
 }
 int Lattice::cleanFrames(int fStart, int fCount)
 {
-	int x,y,z,i;
-	int t;
-	t=fStart+fCount;
-	if (fStart>=frameCount)
-		return LATTICE_ERROR_WRONG_FRAME;
-	if (t>frameCount)
+ 	int i, t;
+
+	t= fStart + fCount;
+
+	if ((fStart >= frameCount) | (t > frameCount))
 		return LATTICE_ERROR_WRONG_FRAME;
 
-	for(i=fStart;i<(fStart+fCount);i++)
-		for(x=0;x<sizeX;x++)
-			for(y=0;y<sizeY;y++)
-				for(z=0;z<sizeZ;z++)
-				{
-					frame[i].red[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=0;
-					frame[i].green[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=0;
-					frame[i].blue[LATTICE_GET_PIXEL_ADDRESS(x,y,z)]=0;
-				}
+	for(i = fStart; i < t; i++)
+	{
+		std::fill_n(frame[i].red,   sizeXYZ, 0);
+		std::fill_n(frame[i].green, sizeXYZ, 0);
+		std::fill_n(frame[i].blue,  sizeXYZ, 0);
+	}
+
+	return 0;
 }
 int Lattice::getFrameCount()
 {
@@ -401,9 +499,17 @@ int latticeHandler()
 	}
 	if (latticeLatticeCreateNew)
 	{
-		lattice->newAnimation();
-		SendMessageW((HWND)threadCoreFrmFramesHandler,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_FRAME_LIST,latticeNewAnimationFrames);
-		SendMessageW((HWND)wndprocFrmMainHandle,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_LATTICE_SIZE,((lattice->getSizeX()*LATTICE_MAX_Y)+lattice->getSizeY())*LATTICE_MAX_Z+lattice->getSizeZ());
+//		lattice->newAnimation();
+//
+//		lattice->cleanFrames(0, latticeNewAnimationFrames);
+//		
+//		SendMessageW((HWND)threadCoreFrmFramesHandler,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_FRAME_LIST,latticeNewAnimationFrames);
+//		SendMessageW((HWND)wndprocFrmMainHandle,wndprocMessages[0],WNDPROC_MESSAGE0_SHOW_LATTICE_SIZE,((lattice->getSizeX()*LATTICE_MAX_Y)+lattice->getSizeY())*LATTICE_MAX_Z+lattice->getSizeZ());
+
+		lattice->setFrameSize(latticeNewAnimationFrames,
+							  latticeNewAnimationLatticeX,
+							  latticeNewAnimationLatticeY,
+							  latticeNewAnimationLatticeZ);
 		latticeLatticeCreateNew=0;
 	}
 	if (latticeSelectionMade)
@@ -525,7 +631,11 @@ int Lattice::openFile()
 		latticeNewAnimationLatticeY=bufferInHeader[PLAYBACK_OFFSET_LATTICESIZE+1];
 		latticeNewAnimationLatticeZ=bufferInHeader[PLAYBACK_OFFSET_LATTICESIZE+2];
 
-		lattice->newAnimation();
+//		lattice->newAnimation();
+		lattice->setFrameSize(latticeNewAnimationFrames,
+							  latticeNewAnimationLatticeX,
+							  latticeNewAnimationLatticeY,
+							  latticeNewAnimationLatticeZ);
 
 		for(i=0;i<32;i++)
 			latticeAnimationTitle[i]=bufferInHeader[PLAYBACK_OFFSET_ANIMATIONTITLE+i];

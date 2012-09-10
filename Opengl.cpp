@@ -195,7 +195,7 @@ void openglDrawAxis()
 {
 	GLUquadric *myQuad_axis;
 	myQuad_axis=gluNewQuadric();
-	GLfloat x,y,z;
+//	GLfloat x,y,z;
 
 	glPushMatrix();
 	glRotatef((GLfloat)90,(GLfloat)0,(GLfloat)1,(GLfloat)0);
@@ -285,11 +285,11 @@ void openglDrawLattice()
 
 	GLUquadric *myQuad;
 	int x,y,z;
-	int xx;
+//	int xx;
 	GLfloat rd;
 	unsigned char r,g,b;
 	int displayLed;
-	int k;
+//	int k;
 
 	
 	myQuad=gluNewQuadric();

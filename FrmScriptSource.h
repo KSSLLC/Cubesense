@@ -100,7 +100,7 @@ namespace CubeSense {
 			// 
 			// openFileDialog1
 			// 
-			this->openFileDialog1->FileName = L"openFileDialog1";
+			this->openFileDialog1->FileName = L"";
 			this->openFileDialog1->Filter = L"VB script files (*.vb)|*.vb|C# script files (*.cs)|*.cs|All files(*.*)|*.*";
 			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &FrmScriptSource::openFileDialog1_FileOk);
 			// 

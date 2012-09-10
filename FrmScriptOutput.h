@@ -60,11 +60,11 @@ namespace CubeSense {
 		{
 			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
 			this->SuspendLayout();
-			//
+			// 
 			// listBox1
-			//
+			// 
 			this->listBox1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->listBox1->Font = (gcnew System::Drawing::Font(L"Courier New", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->listBox1->Font = (gcnew System::Drawing::Font(L"Courier New", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(186)));
 			this->listBox1->FormattingEnabled = true;
 			this->listBox1->ItemHeight = 16;
@@ -76,9 +76,9 @@ namespace CubeSense {
 			this->listBox1->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &FrmScriptOutput::listBox1_MouseClick);
 			this->listBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &FrmScriptOutput::listBox1_SelectedIndexChanged);
 			this->listBox1->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &FrmScriptOutput::listBox1_MouseDoubleClick);
-			//
+			// 
 			// FrmScriptOutput
-			//
+			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 266);

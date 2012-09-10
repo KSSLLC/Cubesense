@@ -12,7 +12,7 @@ using namespace System::Security::Permissions;
 // associated with an assembly.
 //
 [assembly:AssemblyTitleAttribute("CubeSense.exe")];
-[assembly:AssemblyDescriptionAttribute("A Windows application for creating and visualizing 3D animations on an LED cube.")];
+[assembly:AssemblyDescriptionAttribute("CubeSense: A Windows application for creating and visualizing 3D animations on an LED cube.")];
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("Lumisense")];
 [assembly:AssemblyProductAttribute("CubeSense")];
@@ -32,7 +32,7 @@ using namespace System::Security::Permissions;
 // by using the '*' as shown below:
 // [assembly:AssemblyVersionAttribute("1.0.*")];
 
-[assembly:AssemblyVersionAttribute("1.0.*")];
+[assembly:AssemblyVersionAttribute("1.0.704.2")];
 
 [assembly:ComVisible(false)];
 

@@ -47,6 +47,7 @@ namespace scriptInterface
 		int getColorR(int f, int x, int y, int z);
 		int getColorG(int f, int x, int y, int z);
 		int getColorB(int f, int x, int y, int z);
+		int setFrameSize(int f, int x, int y, int z);
 		int rnd(int max);
 		double getCanvasMinX();
 		double getCanvasMaxX();
@@ -104,6 +105,10 @@ public:
 	virtual int getColorB(int f, int x, int y, int z)
 	{
 		return lattice->getColorB(f, x, y ,z);
+	}
+	virtual int setFrameSize(int f, int x, int y, int z)
+	{
+		return lattice->setFrameSize(f, x, y, z);
 	}
 	virtual int drawCube(int f, int x1, int y1, int z1, int x2, int y2, int z2, int r, int g, int b)
 	{
