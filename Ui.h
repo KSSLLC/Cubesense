@@ -4,6 +4,9 @@
 #define UI_MOUSE_MB 1
 #define UI_MOUSE_LB 2
 #define UI_LEFT_SHIFT 3
+#define UI_CONTROL 4
+#define UI_MINUS 5
+#define UI_PLUS 6
 
 #define UI_PRESET_VIEW_NONE 0
 #define UI_PRESET_VIEW_DEFAULT 1

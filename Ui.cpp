@@ -82,6 +82,14 @@ void uiProcessor()
 				uiLatticeDisplayMode=(uiLatticeDisplayMode+1)%4;
 			}
 
+			if ((uiMouseHeld[UI_CONTROL]!=0)&((uiMouseHeld[UI_PLUS]!=0)|(uiMouseHeld[UI_MINUS]!=0)))
+				// CTRL key and either "+" or "-" keys held down changes viewer distance the same as right mouse button and mouse wheel - needed on most laptops or 
+				// whenever a mouse wheel control is unavailable
+				if (uiMouseHeld[UI_PLUS]!=0)
+					uiViewerDistance-=10;
+				else
+					uiViewerDistance+=10;
+
 			if ((uiMouseWheel!=0)&(uiMouseHeld[UI_MOUSE_RB]!=0))
 				//if right mouse button is held down and mouse wheel is turned changes viewer distance
 				if (uiMouseWheel==120)
@@ -90,7 +98,7 @@ void uiProcessor()
 					uiViewerDistance+=125;
 
 			if ((uiMouseWheel!=0)&(uiMouseHeld[UI_MOUSE_RB]==0))
-			{										//if right mouse button is not held down and mouse wheel is turned change active plane for selected lattice display mode
+			{ //if right mouse button is not held down and mouse wheel is turned change active plane for selected lattice display mode
 				if (uiMouseWheel==120)
 					wheelDelta=1;
 				else
@@ -170,6 +178,10 @@ void uiHandler()
 	UI_CHECK_SINGLE_KEY(VK_MBUTTON,UI_MOUSE_MB);
 	UI_CHECK_SINGLE_KEY(VK_LBUTTON,UI_MOUSE_LB);
 	UI_CHECK_SINGLE_KEY(VK_LSHIFT,UI_LEFT_SHIFT);
+	UI_CHECK_SINGLE_KEY(VK_CONTROL,UI_CONTROL);
+	UI_CHECK_SINGLE_KEY(VK_OEM_PLUS,UI_PLUS);
+	UI_CHECK_SINGLE_KEY(VK_OEM_MINUS,UI_MINUS);
+
 	//store last cursor position
 	uiMouseLastX=uiMouseX;
 	uiMouseLastY=uiMouseY;

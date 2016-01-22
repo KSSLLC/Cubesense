@@ -16,7 +16,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("Lumisense")];
 [assembly:AssemblyProductAttribute("CubeSense")];
-[assembly:AssemblyCopyrightAttribute("© Lumisense 2010-2012. All rights reserved.")];
+[assembly:AssemblyCopyrightAttribute("© Lumisense 2010-2016. All rights reserved.")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 
@@ -32,7 +32,7 @@ using namespace System::Security::Permissions;
 // by using the '*' as shown below:
 // [assembly:AssemblyVersionAttribute("1.0.*")];
 
-[assembly:AssemblyVersionAttribute("1.0.704.2")];
+[assembly:AssemblyVersionAttribute("1.0.704.3")];
 
 [assembly:ComVisible(false)];
 
